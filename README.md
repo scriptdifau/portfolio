@@ -1,36 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio
 
-## Getting Started
+Sito portfolio (ispirato a whambrands.com) con pannello di gestione contenuti.
+Stack: Next.js 16 + Tailwind + Supabase (database, login, storage per immagini/video).
 
-First, run the development server:
+## Setup
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. Crea un progetto su [supabase.com](https://supabase.com).
+2. Nel **SQL Editor** esegui `supabase/schema.sql` (tabelle, permessi, bucket `media`, 3 progetti di esempio).
+3. In **Authentication → Users** crea il tuo utente admin (email + password).
+   In **Authentication → Sign In / Providers** disattiva "Allow new users to sign up".
+4. Copia `.env.example` in `.env.local` e inserisci URL e anon/publishable key (Project Settings → API).
+5. `npm install && npm run dev` → sito su http://localhost:3000, admin su http://localhost:3000/admin.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Uso
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `/admin` → crea/modifica progetti (testo, copertina, galleria, highlight, ordine, bozza/pubblicato).
+- `/admin/settings` → nome del sito, video in home, frase di presentazione, About, contatti, sedi.
+- Immagini, GIF e video si caricano direttamente su Supabase Storage (piano gratuito: max 50 MB per file).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Senza `.env.local` il sito mostra dati di esempio e l'admin è disattivato.
 
-## Learn More
+## Deploy
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Vercel: importa il repo e aggiungi le due variabili d'ambiente.
