@@ -4,6 +4,8 @@ import { useActionState, useState } from "react";
 import { saveProject } from "@/app/admin/actions";
 import { Media } from "@/components/Media";
 import type { MediaItem, MediaType, Project } from "@/lib/types";
+import { bodyToHtml } from "@/lib/sanitize";
+import { RichEditor } from "./RichEditor";
 import { Uploader } from "./Uploader";
 
 const input = "w-full border border-neutral-300 bg-white px-3 py-2";
@@ -14,6 +16,7 @@ export function ProjectForm({ project }: { project?: Project }) {
     project?.cover_url ? { url: project.cover_url, type: project.cover_type } : null,
   );
   const [media, setMedia] = useState<MediaItem[]>(project?.media ?? []);
+  const [body, setBody] = useState(bodyToHtml(project?.body));
 
   const move = (i: number, d: -1 | 1) =>
     setMedia((m) => {
@@ -30,6 +33,7 @@ export function ProjectForm({ project }: { project?: Project }) {
       <input type="hidden" name="cover_url" value={cover?.url ?? ""} />
       <input type="hidden" name="cover_type" value={cover?.type ?? "image"} />
       <input type="hidden" name="media" value={JSON.stringify(media)} />
+      <input type="hidden" name="body" value={body} />
 
       <label className="block">
         <span className="mb-1 block text-sm font-medium">Titolo *</span>
@@ -54,15 +58,15 @@ export function ProjectForm({ project }: { project?: Project }) {
         <span className="mb-1 block text-sm font-medium">Sommario (breve)</span>
         <input name="summary" defaultValue={project?.summary ?? ""} className={input} />
       </label>
-      <label className="block">
+      <div>
         <span className="mb-1 block text-sm font-medium">
-          Testo — paragrafi separati da riga vuota; una riga tutta MAIUSCOLA diventa sottotitolo
+          Testo — clicca su un&apos;immagine nel testo per cambiarne dimensione e posizione
         </span>
-        <textarea name="body" rows={12} defaultValue={project?.body ?? ""} className={input} />
-      </label>
+        <RichEditor html={body} onChange={setBody} />
+      </div>
 
       <div>
-        <span className="mb-2 block text-sm font-medium">Copertina (immagine, GIF o video)</span>
+        <span className="mb-2 block text-sm font-medium">Immagine in evidenza (immagine, GIF o video — appare nella griglia e in cima al post)</span>
         {cover && (
           <div className="mb-2 w-48">
             <Media url={cover.url} type={cover.type} className="aspect-square w-full object-cover" />
@@ -79,7 +83,7 @@ export function ProjectForm({ project }: { project?: Project }) {
       </div>
 
       <div>
-        <span className="mb-2 block text-sm font-medium">Galleria</span>
+        <span className="mb-2 block text-sm font-medium">Galleria extra (opzionale, mostrata sotto il testo)</span>
         <ul className="mb-3 space-y-3">
           {media.map((m, i) => (
             <li key={m.url} className="flex gap-3 bg-white p-3">

@@ -4,6 +4,8 @@ import { useActionState, useState } from "react";
 import { saveSettings } from "@/app/admin/actions";
 import { Media } from "@/components/Media";
 import type { SiteSettings } from "@/lib/types";
+import { bodyToHtml } from "@/lib/sanitize";
+import { RichEditor } from "./RichEditor";
 import { Uploader } from "./Uploader";
 
 const input = "w-full border border-neutral-300 bg-white px-3 py-2";
@@ -34,10 +36,12 @@ function Field({
 export function SettingsForm({ s }: { s: SiteSettings }) {
   const [msg, action, pending] = useActionState(saveSettings, null);
   const [hero, setHero] = useState(s.hero_video_url ?? "");
+  const [about, setAbout] = useState(bodyToHtml(s.about));
 
   return (
     <form action={action} className="space-y-6">
       <input type="hidden" name="hero_video_url" value={hero} />
+      <input type="hidden" name="about" value={about} />
       <Field label="Nome del sito (logo)" name="site_name" value={s.site_name} />
 
       <div>
@@ -54,7 +58,10 @@ export function SettingsForm({ s }: { s: SiteSettings }) {
       </div>
 
       <Field label="Frase di presentazione (home)" name="intro" value={s.intro} rows={3} />
-      <Field label="Testo About" name="about" value={s.about} rows={10} />
+      <div>
+        <span className="mb-1 block text-sm font-medium">Testo About</span>
+        <RichEditor html={about} onChange={setAbout} />
+      </div>
       <div className="grid gap-6 sm:grid-cols-2">
         <Field label="Email" name="email" value={s.email} />
         <Field label="Telefono" name="phone" value={s.phone} />

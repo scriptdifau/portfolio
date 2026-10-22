@@ -3,6 +3,7 @@
 import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { sanitizeBody } from "@/lib/sanitize";
 import type { MediaItem } from "@/lib/types";
 
 async function requireUser() {
@@ -65,7 +66,7 @@ export async function saveProject(_: string | null, formData: FormData) {
     slug: slugify(text(formData, "slug") ?? title),
     client: text(formData, "client"),
     summary: text(formData, "summary"),
-    body: text(formData, "body"),
+    body: sanitizeBody(String(formData.get("body") ?? "")) || null,
     cover_url: text(formData, "cover_url"),
     cover_type: text(formData, "cover_type") === "video" ? "video" : "image",
     media,
@@ -98,7 +99,7 @@ export async function saveSettings(_: string | null, formData: FormData) {
     site_name: text(formData, "site_name") ?? "Portfolio",
     hero_video_url: text(formData, "hero_video_url"),
     intro: text(formData, "intro"),
-    about: text(formData, "about"),
+    about: sanitizeBody(String(formData.get("about") ?? "")) || null,
     email: text(formData, "email"),
     phone: text(formData, "phone"),
     instagram: text(formData, "instagram"),
