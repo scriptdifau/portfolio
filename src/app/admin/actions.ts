@@ -69,6 +69,9 @@ export async function saveProject(_: string | null, formData: FormData) {
     body: sanitizeBody(String(formData.get("body") ?? "")) || null,
     cover_url: text(formData, "cover_url"),
     cover_type: text(formData, "cover_type") === "video" ? "video" : "image",
+    tile_shape: ["square", "portrait", "tall", "landscape", "wide"].includes(text(formData, "tile_shape") ?? "")
+      ? text(formData, "tile_shape")
+      : "square",
     media,
     highlight: formData.get("highlight") === "on",
     published: formData.get("published") === "on",

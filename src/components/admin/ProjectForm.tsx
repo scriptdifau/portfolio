@@ -3,10 +3,18 @@
 import { useActionState, useState } from "react";
 import { saveProject } from "@/app/admin/actions";
 import { Media } from "@/components/Media";
-import type { MediaItem, MediaType, Project } from "@/lib/types";
+import type { MediaItem, MediaType, Project, TileShape } from "@/lib/types";
 import { bodyToHtml } from "@/lib/sanitize";
 import { RichEditor } from "./RichEditor";
 import { Uploader } from "./Uploader";
+
+const SHAPES: [TileShape, string, string][] = [
+  ["square", "Quadrato", "1 / 1"],
+  ["portrait", "Verticale", "3 / 4"],
+  ["tall", "Alto", "2 / 3"],
+  ["landscape", "Orizzontale", "4 / 3"],
+  ["wide", "Largo", "16 / 9"],
+];
 
 const input = "w-full border border-neutral-300 bg-white px-3 py-2";
 
@@ -16,6 +24,7 @@ export function ProjectForm({ project }: { project?: Project }) {
     project?.cover_url ? { url: project.cover_url, type: project.cover_type } : null,
   );
   const [media, setMedia] = useState<MediaItem[]>(project?.media ?? []);
+  const [shape, setShape] = useState<TileShape>(project?.tile_shape ?? "square");
   const [body, setBody] = useState(bodyToHtml(project?.body));
 
   const move = (i: number, d: -1 | 1) =>
@@ -34,6 +43,7 @@ export function ProjectForm({ project }: { project?: Project }) {
       <input type="hidden" name="cover_type" value={cover?.type ?? "image"} />
       <input type="hidden" name="media" value={JSON.stringify(media)} />
       <input type="hidden" name="body" value={body} />
+      <input type="hidden" name="tile_shape" value={shape} />
 
       <label className="block">
         <span className="mb-1 block text-sm font-medium">Titolo *</span>
@@ -80,6 +90,26 @@ export function ProjectForm({ project }: { project?: Project }) {
           </div>
         )}
         <Uploader label="Carica copertina" onUploaded={setCover} />
+      </div>
+
+      <div>
+        <span className="mb-2 block text-sm font-medium">Forma del box nella home</span>
+        <div className="flex flex-wrap items-end gap-3">
+          {SHAPES.map(([v, label, ratio]) => (
+            <button
+              key={v}
+              type="button"
+              onClick={() => setShape(v)}
+              className={`flex flex-col items-center gap-1 text-xs ${shape === v ? "font-semibold" : "text-neutral-500"}`}
+            >
+              <span
+                style={{ aspectRatio: ratio }}
+                className={`block w-14 border-2 ${shape === v ? "border-black bg-neutral-300" : "border-neutral-300 bg-neutral-100"}`}
+              />
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div>

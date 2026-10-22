@@ -13,7 +13,7 @@ export const seedSettings: SiteSettings = {
   offices: null,
 };
 
-const base = { client: null, cover_url: null, cover_type: "image" as const, media: [], published: true };
+const base = { client: null, cover_url: null, cover_type: "image" as const, tile_shape: "square" as const, media: [], published: true };
 
 export const seedProjects: Project[] = [
   {

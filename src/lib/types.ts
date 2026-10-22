@@ -1,5 +1,7 @@
 export type MediaType = "image" | "video";
 
+export type TileShape = "square" | "portrait" | "tall" | "landscape" | "wide";
+
 export type MediaItem = { url: string; type: MediaType; caption?: string };
 
 export type Project = {
@@ -11,6 +13,7 @@ export type Project = {
   body: string | null;
   cover_url: string | null;
   cover_type: MediaType;
+  tile_shape: TileShape;
   media: MediaItem[];
   highlight: boolean;
   published: boolean;

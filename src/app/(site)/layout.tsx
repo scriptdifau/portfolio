@@ -6,7 +6,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const [settings, projects] = await Promise.all([getSettings(), getProjects()]);
   return (
     <>
-      <Header siteName={settings.site_name} projects={projects} />
+      <Header siteName={settings.site_name} projects={projects} linkedin={settings.linkedin} />
       <main className="flex-1 pt-16">{children}</main>
       <Footer s={settings} />
     </>

@@ -9,6 +9,7 @@ create table if not exists public.projects (
   body text,
   cover_url text,
   cover_type text not null default 'image' check (cover_type in ('image','video')),
+  tile_shape text not null default 'square' check (tile_shape in ('square','portrait','tall','landscape','wide')),
   media jsonb not null default '[]'::jsonb,   -- [{url,type,caption}]
   highlight boolean not null default false,
   published boolean not null default true,
@@ -29,6 +30,10 @@ create table if not exists public.site_settings (
   offices text   -- una riga per sede: "Città | link Google Maps"
 );
 insert into public.site_settings (id) values (1) on conflict do nothing;
+
+-- Per database già creati prima dell'aggiunta di tile_shape:
+alter table public.projects add column if not exists tile_shape text not null default 'square'
+  check (tile_shape in ('square','portrait','tall','landscape','wide'));
 
 alter table public.projects enable row level security;
 alter table public.site_settings enable row level security;
