@@ -76,7 +76,7 @@ export function ProjectForm({ project }: { project?: Project }) {
       </div>
 
       <div>
-        <span className="mb-2 block text-sm font-medium">Immagine in evidenza (immagine, GIF o video — appare nella griglia e in cima al post)</span>
+        <span className="mb-2 block text-sm font-medium">Immagine in evidenza (immagine, GIF o video — appare solo nella griglia della home)</span>
         {cover && (
           <div className="mb-2 w-48">
             <Media url={cover.url} type={cover.type} className="aspect-square w-full object-cover" />

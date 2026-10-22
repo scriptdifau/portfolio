@@ -32,14 +32,6 @@ async function Project({ params }: Props) {
 
   return (
     <article>
-      {project.cover_url && (
-        <Media
-          url={project.cover_url}
-          type={project.cover_type}
-          alt={project.title}
-          className="max-h-[80vh] w-full object-cover"
-        />
-      )}
       <div className="mx-auto max-w-3xl px-6 py-16">
         {project.client && (
           <p className="mb-3 text-xs uppercase tracking-widest text-neutral-500">{project.client}</p>
