@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import { saveProject } from "@/app/admin/actions";
 import { Media } from "@/components/Media";
-import type { MediaItem, MediaType, Project, TileShape } from "@/lib/types";
+import type { MediaItem, MediaType, MediaWidth, Project, TileShape } from "@/lib/types";
 import { bodyToHtml } from "@/lib/sanitize";
 import { RichEditor } from "./RichEditor";
 import { Uploader } from "./Uploader";
@@ -113,7 +113,7 @@ export function ProjectForm({ project }: { project?: Project }) {
       </div>
 
       <div>
-        <span className="mb-2 block text-sm font-medium">Galleria extra (opzionale, mostrata sotto il testo)</span>
+        <span className="mb-2 block text-sm font-medium">Immagini e video sotto il testo (a tutta larghezza; Metà e Un terzo li affiancano)</span>
         <ul className="mb-3 space-y-3">
           {media.map((m, i) => (
             <li key={m.url} className="flex gap-3 bg-white p-3">
@@ -131,7 +131,26 @@ export function ProjectForm({ project }: { project?: Project }) {
                   placeholder="Didascalia (opzionale)"
                   className={input}
                 />
-                <div className="flex gap-3 text-sm">
+                <div className="flex flex-wrap items-center gap-2 text-sm">
+                  {(
+                    [
+                      ["full", "Intera"],
+                      ["half", "Metà"],
+                      ["third", "Un terzo"],
+                    ] as [MediaWidth, string][]
+                  ).map(([w, label]) => (
+                    <button
+                      key={w}
+                      type="button"
+                      onClick={() =>
+                        setMedia((all) => all.map((x, j) => (j === i ? { ...x, width: w } : x)))
+                      }
+                      className={`border px-2 py-0.5 ${(m.width ?? "full") === w ? "border-black bg-black text-white" : "border-neutral-300"}`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                  <span className="mx-1 text-neutral-300">|</span>
                   <button type="button" onClick={() => move(i, -1)}>↑</button>
                   <button type="button" onClick={() => move(i, 1)}>↓</button>
                   <button

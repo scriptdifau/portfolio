@@ -2,7 +2,9 @@ export type MediaType = "image" | "video";
 
 export type TileShape = "square" | "portrait" | "tall" | "landscape" | "wide";
 
-export type MediaItem = { url: string; type: MediaType; caption?: string };
+export type MediaWidth = "full" | "half" | "third";
+
+export type MediaItem = { url: string; type: MediaType; caption?: string; width?: MediaWidth };
 
 export type Project = {
   id: string;

@@ -1,8 +1,18 @@
 import type { MediaType } from "@/lib/types";
 
-type Props = { url: string; type: MediaType; alt?: string; className?: string };
+type Props = {
+  url: string;
+  type: MediaType;
+  alt?: string;
+  className?: string;
+  // "player": video con controlli, parte al click (pagina del post). Di default: loop muto (tile).
+  player?: boolean;
+};
 
-export function Media({ url, type, alt = "", className = "" }: Props) {
+export function Media({ url, type, alt = "", className = "", player }: Props) {
+  if (type === "video" && player) {
+    return <video src={url} className={className} controls playsInline preload="metadata" />;
+  }
   if (type === "video") {
     return (
       <video

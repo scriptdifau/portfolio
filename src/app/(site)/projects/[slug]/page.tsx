@@ -32,21 +32,27 @@ async function Project({ params }: Props) {
 
   return (
     <article>
-      <div className="mx-auto max-w-3xl px-6 py-16">
-        {project.client && (
-          <p className="mb-3 text-xs uppercase tracking-widest text-neutral-500">{project.client}</p>
-        )}
-        <h1 className="mb-10 text-4xl font-light sm:text-5xl">{project.title}</h1>
+      <div className="px-[8%] pb-16 pt-12">
+        <h1 className="post-body font-bold uppercase">{project.title}</h1>
         {project.body && <RichText text={project.body} />}
       </div>
 
       {project.media.length > 0 && (
-        <div className="space-y-1">
+        <div className="flex flex-wrap gap-[0.6vw]">
           {project.media.map((m, idx) => (
-            <figure key={idx}>
-              <Media url={m.url} type={m.type} alt={m.caption} className="w-full" />
+            <figure
+              key={idx}
+              className={
+                m.width === "third"
+                  ? "w-[calc((100%-1.2vw)/3)]"
+                  : m.width === "half"
+                    ? "w-[calc((100%-0.6vw)/2)]"
+                    : "w-full"
+              }
+            >
+              <Media url={m.url} type={m.type} alt={m.caption} player className="w-full" />
               {m.caption && (
-                <figcaption className="px-6 py-2 text-xs text-neutral-500">{m.caption}</figcaption>
+                <figcaption className="px-[8%] py-2 text-xs text-neutral-500">{m.caption}</figcaption>
               )}
             </figure>
           ))}

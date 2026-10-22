@@ -29,7 +29,7 @@ export function sanitizeBody(html: string): string {
     allowedAttributes: {
       a: ["href", "target", "rel"],
       img: ["src", "alt", "data-size", "data-align"],
-      video: ["src", "data-size", "data-align", "autoplay", "muted", "loop", "playsinline"],
+      video: ["src", "data-size", "data-align", "autoplay", "muted", "loop", "playsinline", "controls"],
     },
     allowedSchemes: ["http", "https", "mailto"],
     transformTags: {
