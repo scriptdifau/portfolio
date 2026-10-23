@@ -28,7 +28,7 @@ function Grid({ projects, count, className }: { projects: Project[]; count: numb
               key={p.id}
               href={`/projects/${p.slug}`}
               style={{ aspectRatio: SHAPE_ASPECT[p.tile_shape] ?? "1 / 1" }}
-              className="group relative block w-full overflow-hidden bg-neutral-100"
+              className="tile group relative block w-full overflow-hidden bg-neutral-100"
             >
               {p.cover_url ? (
                 <Media
@@ -38,13 +38,13 @@ function Grid({ projects, count, className }: { projects: Project[]; count: numb
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 />
               ) : (
-                <div className="flex h-full items-end p-4 text-lg font-light">{p.title}</div>
+                <div className="flex h-full items-center justify-center p-4 text-center text-lg font-light">{p.title}</div>
               )}
-              <div className="absolute inset-0 flex flex-col justify-end bg-black/50 p-4 text-white opacity-0 transition group-hover:opacity-100">
+              <div className="tile-label absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/45 p-4 text-center text-white transition">
                 {p.client && (
                   <span className="text-xs uppercase tracking-widest">{p.client}</span>
                 )}
-                <span className="text-lg">{p.title}</span>
+                <span className="text-lg uppercase tracking-wide">{p.title}</span>
               </div>
             </Link>
           ))}
