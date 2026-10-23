@@ -31,28 +31,28 @@ async function Project({ params }: Props) {
   const next = all[(i + 1) % all.length];
 
   return (
-    <article>
-      <div className="px-[8%] pb-16 pt-12">
+    <article className="post-column px-4 sm:px-0">
+      <div className="pb-12 pt-12">
         <h1 className="post-body font-bold uppercase">{project.title}</h1>
         {project.body && <RichText text={project.body} />}
       </div>
 
       {project.media.length > 0 && (
-        <div className="flex flex-wrap gap-[0.6vw]">
+        <div className="flex flex-wrap gap-[1%]">
           {project.media.map((m, idx) => (
             <figure
               key={idx}
               className={
                 m.width === "third"
-                  ? "w-[calc((100%-1.2vw)/3)]"
+                  ? "w-[calc((100%-2%)/3)]"
                   : m.width === "half"
-                    ? "w-[calc((100%-0.6vw)/2)]"
+                    ? "w-[calc((100%-1%)/2)]"
                     : "w-full"
               }
             >
               <Media url={m.url} type={m.type} alt={m.caption} player className="w-full" />
               {m.caption && (
-                <figcaption className="px-[8%] py-2 text-xs text-neutral-500">{m.caption}</figcaption>
+                <figcaption className="py-2 text-xs text-neutral-500">{m.caption}</figcaption>
               )}
             </figure>
           ))}
@@ -60,7 +60,7 @@ async function Project({ params }: Props) {
       )}
 
       {next && next.id !== project.id && (
-        <div className="px-6 pt-16 text-right">
+        <div className="pt-16 text-right">
           <Link href={`/projects/${next.slug}`} className="text-2xl font-light hover:opacity-60">
             Next: {next.title} →
           </Link>

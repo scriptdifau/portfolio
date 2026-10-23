@@ -19,7 +19,10 @@ body {
 }
 
 /* Testo dei contenuti (editor admin + pagine pubbliche) */
-.post-body { font-size: clamp(0.95rem, 1.25vw, 1.25rem); line-height: 1.5; }
+.post-body { font-size: clamp(0.9rem, 1.05vw, 1.1rem); line-height: 1.5; }
+
+/* Colonna centrale delle pagine interne: testo e media stanno tutti qui dentro */
+.post-column { width: 65%; min-width: min(100%, 720px); margin-inline: auto; }
 .post-body::after { content: ""; display: block; clear: both; }
 .post-body > * + * { margin-top: 1.25rem; }
 .post-body > p + p { margin-top: 0; }
