@@ -1,5 +1,6 @@
 import type { MediaType } from "@/lib/types";
 import { AutoPlayVideo } from "./AutoPlayVideo";
+import { TileVideo } from "./TileVideo";
 
 type Props = {
   url: string;
@@ -15,17 +16,7 @@ export function Media({ url, type, alt = "", className = "", player }: Props) {
     return <AutoPlayVideo url={url} className={className} />;
   }
   if (type === "video") {
-    return (
-      <video
-        src={url}
-        className={className}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-      />
-    );
+    return <TileVideo url={url} className={className} />;
   }
   // eslint-disable-next-line @next/next/no-img-element
   return <img src={url} alt={alt} loading="lazy" className={className} />;
