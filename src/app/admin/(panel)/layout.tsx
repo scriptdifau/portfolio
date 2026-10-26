@@ -12,6 +12,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
             Progetti
           </Link>
           <Link href="/admin/settings">Impostazioni</Link>
+          <Link href="/admin/optimize">Ottimizza video</Link>
           <Link href="/" target="_blank" className="text-neutral-500">
             Vedi sito ↗
           </Link>

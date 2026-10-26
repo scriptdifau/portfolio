@@ -42,6 +42,11 @@ export async function login(_: string | null, formData: FormData) {
   redirect("/admin");
 }
 
+export async function refreshContent() {
+  await requireUser();
+  refresh();
+}
+
 export async function logout() {
   const supabase = await createClient();
   await supabase.auth.signOut();
