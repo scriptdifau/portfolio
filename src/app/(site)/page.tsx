@@ -35,6 +35,8 @@ function Grid({ projects, count, className }: { projects: Project[]; count: numb
                   url={p.cover_url}
                   type={p.cover_type}
                   alt={p.title}
+                  fill
+                  sizes="(min-width: 640px) 34vw, 50vw"
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 />
               ) : (

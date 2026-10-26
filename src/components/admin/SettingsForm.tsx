@@ -48,7 +48,7 @@ export function SettingsForm({ s }: { s: SiteSettings }) {
         <span className="mb-2 block text-sm font-medium">Video in home (loop, muto)</span>
         {hero && (
           <div className="mb-2 w-64">
-            <Media url={hero} type="video" className="aspect-video w-full object-cover" />
+            <Media url={hero} type="video" raw className="aspect-video w-full object-cover" />
             <button type="button" onClick={() => setHero("")} className="mt-1 text-xs text-red-600">
               Rimuovi
             </button>

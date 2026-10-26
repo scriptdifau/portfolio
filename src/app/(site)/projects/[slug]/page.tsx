@@ -50,7 +50,7 @@ async function Project({ params }: Props) {
                     : "w-full"
               }
             >
-              <Media url={m.url} type={m.type} alt={m.caption} player className="w-full" />
+              <Media url={m.url} type={m.type} alt={m.caption} player sizes="(min-width: 1100px) 65vw, 100vw" className="w-full" />
               {m.caption && (
                 <figcaption className="py-2 text-xs text-neutral-500">{m.caption}</figcaption>
               )}

@@ -79,7 +79,7 @@ export function ProjectForm({ project }: { project?: Project }) {
         <span className="mb-2 block text-sm font-medium">Immagine in evidenza (immagine, GIF o video — appare solo nella griglia della home)</span>
         {cover && (
           <div className="mb-2 w-48">
-            <Media url={cover.url} type={cover.type} className="aspect-square w-full object-cover" />
+            <Media url={cover.url} type={cover.type} raw className="aspect-square w-full object-cover" />
             <button
               type="button"
               onClick={() => setCover(null)}
@@ -118,7 +118,7 @@ export function ProjectForm({ project }: { project?: Project }) {
           {media.map((m, i) => (
             <li key={m.url} className="flex gap-3 bg-white p-3">
               <div className="w-28 shrink-0">
-                <Media url={m.url} type={m.type} className="aspect-square w-full object-cover" />
+                <Media url={m.url} type={m.type} raw className="aspect-square w-full object-cover" />
               </div>
               <div className="flex-1 space-y-2">
                 <input
