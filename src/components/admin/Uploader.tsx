@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { compressVideo } from "@/lib/compressVideo";
 import type { MediaType } from "@/lib/types";
 
 type Props = {
@@ -35,6 +36,7 @@ async function shrinkJpeg(file: File): Promise<File> {
 // Carica direttamente da browser su Supabase Storage (nessun limite di body del server).
 export function Uploader({ label, multiple, onUploaded }: Props) {
   const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   async function onChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -45,12 +47,18 @@ export function Uploader({ label, multiple, onUploaded }: Props) {
     setError(null);
     const supabase = createClient();
     for (const original of files) {
-      const file = await shrinkJpeg(original);
-      if (file.type.startsWith("video") && file.size > VIDEO_WARN_MB * 1_000_000) {
-        setError(
-          `${file.name} pesa ${Math.round(file.size / 1_000_000)} MB: caricato, ma conviene comprimerlo (es. HandBrake, "Web Optimized") per non consumare il traffico di Supabase.`,
-        );
+      let file = await shrinkJpeg(original);
+      if (file.type.startsWith("video")) {
+        setStatus(`Compressione di ${file.name}…`);
+        const result = await compressVideo(file, (p) => setStatus(`Compressione di ${file.name}… ${p}%`));
+        file = result.file;
+        if (file.size > VIDEO_WARN_MB * 1_000_000) {
+          setError(
+            `${file.name} pesa ancora ${Math.round(file.size / 1_000_000)} MB: è stato caricato, ma conviene accorciarlo o comprimerlo di più (es. HandBrake) per non consumare il traffico del sito.`,
+          );
+        }
       }
+      setStatus(`Caricamento di ${file.name}…`);
       const ext = file.name.split(".").pop()?.toLowerCase() ?? "bin";
       const path = `${new Date().getFullYear()}/${crypto.randomUUID()}.${ext}`;
       const { error: err } = await supabase.storage
@@ -66,13 +74,14 @@ export function Uploader({ label, multiple, onUploaded }: Props) {
         type: file.type.startsWith("video") ? "video" : "image",
       });
     }
+    setStatus(null);
     setBusy(false);
   }
 
   return (
     <div>
       <label className="inline-block cursor-pointer border border-neutral-300 bg-white px-3 py-1.5 text-sm hover:bg-neutral-100">
-        {busy ? "Caricamento…" : label}
+        {busy ? (status ?? "Caricamento…") : label}
         <input
           type="file"
           accept="image/*,video/*"
