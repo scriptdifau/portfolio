@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { thumbUrl } from "@/lib/thumb";
 import type { Project } from "@/lib/types";
 import { deleteProject } from "../actions";
 
@@ -7,7 +8,7 @@ export default async function AdminHome() {
   const supabase = await createClient();
   const { data } = await supabase
     .from("projects")
-    .select("*")
+    .select("id, title, cover_url, cover_type, published, highlight, sort_order")
     .order("sort_order")
     .order("created_at", { ascending: false });
   const projects = (data ?? []) as Project[];
@@ -26,7 +27,7 @@ export default async function AdminHome() {
             <div className="h-14 w-14 shrink-0 bg-neutral-100">
               {p.cover_url && p.cover_type === "image" && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={p.cover_url} alt="" className="h-full w-full object-cover" />
+                <img src={thumbUrl(p.cover_url, 128)} alt="" loading="lazy" className="h-full w-full object-cover" />
               )}
             </div>
             <div className="min-w-0 flex-1">

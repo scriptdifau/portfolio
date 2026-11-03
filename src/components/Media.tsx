@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { MediaType } from "@/lib/types";
 import { AutoPlayVideo } from "./AutoPlayVideo";
+import { thumbUrl } from "@/lib/thumb";
 import { TileVideo } from "./TileVideo";
 
 type Props = {
@@ -28,7 +29,13 @@ export function Media({ url, type, alt = "", className = "", player, fill, sizes
     return <TileVideo url={url} className={className} />;
   }
 
-  if (raw || !optimizable(url)) {
+  if (raw) {
+    // anteprime dell'admin: miniatura leggera
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={thumbUrl(url, 256)} alt={alt} loading="lazy" className={className} />;
+  }
+
+  if (!optimizable(url)) {
     // eslint-disable-next-line @next/next/no-img-element
     return <img src={url} alt={alt} loading="lazy" className={className} />;
   }
