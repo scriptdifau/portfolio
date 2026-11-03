@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Project } from "@/lib/types";
+import { MobileMenu } from "./MobileMenu";
 
 function Dropdown({ label, items }: { label: string; items: Project[] }) {
   if (items.length === 0) return null;
@@ -35,11 +36,14 @@ export function Header({
 }) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-white/90 backdrop-blur">
-      <nav className="flex h-16 items-center justify-between px-6 text-xs">
-        <Link href="/" className="text-sm font-semibold uppercase tracking-[0.25em]">
+      <nav className="flex h-16 items-center justify-between gap-4 px-4 text-xs md:px-6">
+        <Link
+          href="/"
+          className="min-w-0 truncate whitespace-nowrap text-xs font-semibold uppercase tracking-[0.18em] md:text-sm md:tracking-[0.25em]"
+        >
           {siteName}
         </Link>
-        <ul className="flex items-center gap-8">
+        <ul className="hidden items-center gap-8 md:flex">
           <Dropdown label="Highlights" items={projects.filter((p) => p.highlight)} />
           <Dropdown label="Projects" items={projects} />
           <li>
@@ -62,6 +66,7 @@ export function Header({
             </li>
           )}
         </ul>
+        <MobileMenu projects={projects} linkedin={linkedin} />
       </nav>
     </header>
   );
