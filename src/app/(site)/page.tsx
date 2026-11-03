@@ -40,13 +40,13 @@ function Grid({ projects, count, className }: { projects: Project[]; count: numb
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 />
               ) : (
-                <div className="flex h-full items-center justify-center p-4 text-center text-lg font-light">{p.title}</div>
+                <div className="flex h-full items-center justify-center p-2 text-center text-[0.7rem] font-light sm:p-4 sm:text-lg">{p.title}</div>
               )}
-              <div className="tile-label absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/45 p-4 text-center text-white transition">
+              <div className="tile-label absolute inset-0 flex flex-col items-center justify-center gap-0.5 bg-black/45 p-2 text-center text-white transition sm:gap-1 sm:p-4">
                 {p.client && (
-                  <span className="text-xs uppercase tracking-widest">{p.client}</span>
+                  <span className="text-[0.55rem] uppercase tracking-wider sm:text-xs sm:tracking-widest">{p.client}</span>
                 )}
-                <span className="text-lg uppercase tracking-wide">{p.title}</span>
+                <span className="text-[0.7rem] uppercase leading-tight tracking-wide sm:text-lg">{p.title}</span>
               </div>
             </Link>
           ))}
