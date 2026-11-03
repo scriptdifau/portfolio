@@ -27,6 +27,24 @@ export function ProjectForm({ project }: { project?: Project }) {
   const [shape, setShape] = useState<TileShape>(project?.tile_shape ?? "square");
   const [body, setBody] = useState(bodyToHtml(project?.body));
 
+  // trascinamento: indice dell'elemento preso e di quello sopra cui si trova
+  const [dragFrom, setDragFrom] = useState<number | null>(null);
+  const [dragOver, setDragOver] = useState<number | null>(null);
+
+  const reorder = (from: number, to: number) =>
+    setMedia((m) => {
+      if (from === to) return m;
+      const copy = [...m];
+      const [item] = copy.splice(from, 1);
+      copy.splice(to, 0, item);
+      return copy;
+    });
+
+  const endDrag = () => {
+    setDragFrom(null);
+    setDragOver(null);
+  };
+
   const move = (i: number, d: -1 | 1) =>
     setMedia((m) => {
       const j = i + d;
@@ -113,12 +131,45 @@ export function ProjectForm({ project }: { project?: Project }) {
       </div>
 
       <div>
-        <span className="mb-2 block text-sm font-medium">Immagini e video sotto il testo (a tutta larghezza; Metà e Un terzo li affiancano)</span>
+        <span className="mb-2 block text-sm font-medium">Immagini e video sotto il testo (trascina per riordinare; Metà e Un terzo li affiancano)</span>
         <ul className="mb-3 space-y-3">
           {media.map((m, i) => (
-            <li key={m.url} className="flex gap-3 bg-white p-3">
-              <div className="w-28 shrink-0">
+            <li
+              key={m.url}
+              onDragOver={(e) => {
+                if (dragFrom === null) return;
+                e.preventDefault();
+                setDragOver(i);
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                if (dragFrom !== null) reorder(dragFrom, i);
+                endDrag();
+              }}
+              className={`flex gap-3 bg-white p-3 ${dragFrom === i ? "opacity-40" : ""} ${
+                dragOver === i && dragFrom !== null && dragFrom !== i
+                  ? dragFrom > i
+                    ? "border-t-4 border-black"
+                    : "border-b-4 border-black"
+                  : ""
+              }`}
+            >
+              <div
+                draggable
+                onDragStart={(e) => {
+                  const row = e.currentTarget.closest("li");
+                  if (row) e.dataTransfer.setDragImage(row, 20, 20);
+                  e.dataTransfer.effectAllowed = "move";
+                  setDragFrom(i);
+                }}
+                onDragEnd={endDrag}
+                title="Trascina per riordinare"
+                className="relative w-28 shrink-0 cursor-grab active:cursor-grabbing"
+              >
                 <Media url={m.url} type={m.type} raw className="aspect-square w-full object-cover" />
+                <span className="pointer-events-none absolute left-1 top-1 bg-white/90 px-1 text-xs leading-5">
+                  ⠿ {i + 1}
+                </span>
               </div>
               <div className="flex-1 space-y-2">
                 <input
