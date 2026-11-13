@@ -100,6 +100,17 @@ export async function deleteProject(formData: FormData) {
   redirect("/admin");
 }
 
+export async function reorderProjects(ids: string[]): Promise<string | null> {
+  const supabase = await requireUser();
+  const results = await Promise.all(
+    ids.map((id, i) => supabase.from("projects").update({ sort_order: i + 1 }).eq("id", id)),
+  );
+  const failed = results.find((r) => r.error);
+  if (failed?.error) return failed.error.message;
+  refresh();
+  return null;
+}
+
 export async function saveSettings(_: string | null, formData: FormData) {
   const supabase = await requireUser();
   const { error } = await supabase.from("site_settings").upsert({
