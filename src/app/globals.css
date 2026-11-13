@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #111111;
+  --header-bg: #ededed; /* sfondo dell'header */
+  --header-h: 4.4rem; /* altezza dell'header da 768 px in su (sotto: 4rem) */
 }
 
 @theme inline {

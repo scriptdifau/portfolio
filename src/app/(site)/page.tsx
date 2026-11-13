@@ -61,20 +61,22 @@ export default async function Home() {
 
   return (
     <>
-      <section className="pb-12 pt-4 md:pt-8">
-        {settings.hero_video_url && (
-          <Media
-            url={settings.hero_video_url}
-            type="video"
-            className="mb-10 aspect-video w-full object-cover md:mb-14"
-          />
-        )}
-        {settings.intro && (
-          <div className="post-column px-4 sm:px-0">
-            <p className="post-intro">{settings.intro}</p>
-          </div>
-        )}
-      </section>
+      {(settings.hero_video_url || settings.intro) && (
+        <section className="pb-12 pt-4 md:pt-8">
+          {settings.hero_video_url && (
+            <Media
+              url={settings.hero_video_url}
+              type="video"
+              className="mb-10 aspect-video w-full object-cover md:mb-14"
+            />
+          )}
+          {settings.intro && (
+            <div className="post-column px-4 sm:px-0">
+              <p className="post-intro">{settings.intro}</p>
+            </div>
+          )}
+        </section>
+      )}
 
       <Grid projects={projects} count={2} className="flex sm:hidden" />
       <Grid projects={projects} count={3} className="hidden sm:flex" />

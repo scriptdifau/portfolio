@@ -35,8 +35,8 @@ export function Header({
   linkedin?: string | null;
 }) {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-white">
-      <nav className="post-column flex h-16 items-center justify-between gap-4 px-4 text-xs md:h-24 md:px-0 md:text-[0.95rem]">
+    <header className="fixed inset-x-0 top-0 z-50 bg-[var(--header-bg)]">
+      <nav className="post-column flex h-16 items-center justify-between gap-4 px-4 text-xs md:h-[var(--header-h)] md:px-0 md:text-[0.95rem]">
         <Link
           href="/"
           className="min-w-0 truncate whitespace-nowrap text-xs font-bold uppercase tracking-[0.06em] md:text-base md:tracking-[0.04em]"
