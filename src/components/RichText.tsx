@@ -15,11 +15,13 @@ function optimizeImages(html: string) {
   });
 }
 
+const dropEmptyParagraphs = (html: string) => html.replace(/<p>(\s|&nbsp;|<br\s*\/?>)*<\/p>/g, "");
+
 export function RichText({ text }: { text: string }) {
   return (
     <div
       className="post-body"
-      dangerouslySetInnerHTML={{ __html: optimizeImages(sanitizeBody(bodyToHtml(text))) }}
+      dangerouslySetInnerHTML={{ __html: dropEmptyParagraphs(optimizeImages(sanitizeBody(bodyToHtml(text)))) }}
     />
   );
 }

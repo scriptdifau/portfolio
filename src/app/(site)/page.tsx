@@ -61,16 +61,18 @@ export default async function Home() {
 
   return (
     <>
-      <section className="px-6 pb-16 pt-8">
+      <section className="pb-12 pt-4 md:pt-8">
         {settings.hero_video_url && (
           <Media
             url={settings.hero_video_url}
             type="video"
-            className="mb-10 aspect-video w-full object-cover"
+            className="mb-10 aspect-video w-full object-cover md:mb-14"
           />
         )}
         {settings.intro && (
-          <p className="max-w-4xl text-3xl font-light leading-tight sm:text-5xl">{settings.intro}</p>
+          <div className="post-column px-4 sm:px-0">
+            <p className="post-intro">{settings.intro}</p>
+          </div>
         )}
       </section>
 

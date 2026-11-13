@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// Clarity City (VMware, licenza SIL OFL): Medium per i testi, Bold per titoli e sottotitoli.
+const clarity = localFont({
+  src: [
+    { path: "../fonts/ClarityCity-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/ClarityCity-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-clarity",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -19,10 +19,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="it"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang="it" className={`${clarity.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

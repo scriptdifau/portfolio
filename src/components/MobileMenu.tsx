@@ -14,7 +14,6 @@ export function MobileMenu({
 }) {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
-  const highlights = projects.filter((p) => p.highlight);
 
   const group = (label: string, items: Project[]) =>
     items.length > 0 && (
@@ -23,7 +22,7 @@ export function MobileMenu({
         <ul className="space-y-2">
           {items.map((p) => (
             <li key={p.id}>
-              <Link href={`/projects/${p.slug}`} onClick={close} className="block text-base">
+              <Link href={`/projects/${p.slug}`} onClick={close} className="block text-sm uppercase">
                 {p.title}
               </Link>
             </li>
@@ -48,8 +47,7 @@ export function MobileMenu({
 
       {open && (
         <nav className="absolute inset-x-0 top-full h-[calc(100dvh-4rem)] space-y-8 overflow-y-auto bg-white px-6 py-8">
-          {group("Highlights", highlights)}
-          {group("Projects", projects)}
+          {group("Project", projects)}
           <ul className="space-y-3 text-sm uppercase tracking-widest">
             <li>
               <Link href="/about" onClick={close}>
@@ -58,7 +56,7 @@ export function MobileMenu({
             </li>
             <li>
               <Link href="/#contact" onClick={close}>
-                Contact
+                Contacts
               </Link>
             </li>
             {linkedin && (

@@ -32,8 +32,8 @@ async function Project({ params }: Props) {
 
   return (
     <article className="post-column px-4 sm:px-0">
-      <div className="pb-12 pt-12">
-        <h1 className="post-body font-bold uppercase">{project.title}</h1>
+      <div className="pb-12 pt-6 md:pt-10">
+        <h1 className="post-title">{project.title}</h1>
         {project.body && <RichText text={project.body} />}
       </div>
 
@@ -61,8 +61,11 @@ async function Project({ params }: Props) {
 
       {next && next.id !== project.id && (
         <div className="pt-16 text-right">
-          <Link href={`/projects/${next.slug}`} className="text-2xl font-light hover:opacity-60">
-            Next: {next.title} →
+          <Link
+            href={`/projects/${next.slug}`}
+            className="text-sm uppercase tracking-[0.02em] hover:opacity-60 md:text-xl"
+          >
+            Next | {next.title} →
           </Link>
         </div>
       )}
