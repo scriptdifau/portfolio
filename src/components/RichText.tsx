@@ -17,10 +17,10 @@ function optimizeImages(html: string) {
 
 const dropEmptyParagraphs = (html: string) => html.replace(/<p>(\s|&nbsp;|<br\s*\/?>)*<\/p>/g, "");
 
-export function RichText({ text }: { text: string }) {
+export function RichText({ text, className = "post-body" }: { text: string; className?: string }) {
   return (
     <div
-      className="post-body"
+      className={className}
       dangerouslySetInnerHTML={{ __html: dropEmptyParagraphs(optimizeImages(sanitizeBody(bodyToHtml(text)))) }}
     />
   );

@@ -113,7 +113,13 @@ export async function reorderProjects(ids: string[]): Promise<string | null> {
 
 export async function saveSettings(_: string | null, formData: FormData) {
   const supabase = await requireUser();
+  // foto About e CV: presenti nel form solo se modificati (le colonne vanno aggiunte su Supabase, vedi schema.sql)
+  const extra: Record<string, string | null> = {};
+  if (formData.has("about_image_url")) extra.about_image_url = text(formData, "about_image_url");
+  if (formData.has("cv_url")) extra.cv_url = text(formData, "cv_url");
+
   const { error } = await supabase.from("site_settings").upsert({
+    ...extra,
     id: 1,
     site_name: text(formData, "site_name") ?? "Portfolio",
     hero_video_url: text(formData, "hero_video_url"),
@@ -125,7 +131,11 @@ export async function saveSettings(_: string | null, formData: FormData) {
     linkedin: text(formData, "linkedin"),
     offices: text(formData, "offices"),
   });
-  if (error) return error.message;
+  if (error) {
+    return /about_image_url|cv_url/.test(error.message)
+      ? "Prima di salvare foto e CV vanno aggiunte due colonne su Supabase: esegui il blocco SQL in fondo a supabase/schema.sql."
+      : error.message;
+  }
   refresh();
   return "Salvato ✓";
 }

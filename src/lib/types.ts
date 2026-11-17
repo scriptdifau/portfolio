@@ -32,4 +32,6 @@ export type SiteSettings = {
   instagram: string | null;
   linkedin: string | null;
   offices: string | null;
+  about_image_url?: string | null; // foto della pagina About (colonna da aggiungere su Supabase)
+  cv_url?: string | null; // PDF del CV (colonna da aggiungere su Supabase)
 };

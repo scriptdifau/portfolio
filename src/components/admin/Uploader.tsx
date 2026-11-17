@@ -8,6 +8,7 @@ import type { MediaType } from "@/lib/types";
 type Props = {
   label: string;
   multiple?: boolean;
+  accept?: string; // tipi di file ammessi; di default immagini e video
   onUploaded: (file: { url: string; type: MediaType }) => void;
 };
 
@@ -34,7 +35,7 @@ async function shrinkJpeg(file: File): Promise<File> {
 }
 
 // Carica direttamente da browser su Supabase Storage (nessun limite di body del server).
-export function Uploader({ label, multiple, onUploaded }: Props) {
+export function Uploader({ label, multiple, accept = "image/*,video/*", onUploaded }: Props) {
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -84,7 +85,7 @@ export function Uploader({ label, multiple, onUploaded }: Props) {
         {busy ? (status ?? "Caricamento…") : label}
         <input
           type="file"
-          accept="image/*,video/*"
+          accept={accept}
           multiple={multiple}
           disabled={busy}
           onChange={onChange}

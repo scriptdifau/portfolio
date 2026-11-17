@@ -75,3 +75,7 @@ insert into public.projects (slug, title, client, summary, body, highlight, sort
  E'We launched SKILLATHLETIC, an athletic training method and programme developed by Technogym and inspired by the training techniques of professional and Olympic athletes.\n\nI worked on the development of the brand identity and the 360° integrated campaign, spanning TV commercials, print advertising, in-gym posters and a dedicated app, ensuring a consistent brand experience across all touchpoints.',
  true, 3)
 on conflict (slug) do nothing;
+
+-- Pagina About: foto e CV modificabili da /admin → Impostazioni (eseguire una volta)
+alter table public.site_settings add column if not exists about_image_url text;
+alter table public.site_settings add column if not exists cv_url text;

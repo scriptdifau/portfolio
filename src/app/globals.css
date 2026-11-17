@@ -81,3 +81,30 @@ body {
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.65);
   }
 }
+
+/* Pagina About: foto a tutta colonna con il testo verde sopra (da 768 px); sotto, il testo va su fondo scuro */
+.about-hero { container-type: inline-size; background: #111; }
+.about-photo { position: relative; aspect-ratio: 4 / 3; }
+.about-copy-wrap { padding: 1.5rem 1.25rem 2rem; color: var(--accent); }
+.about-copy { font-size: 0.9rem; line-height: 1.35; font-weight: 500; }
+.about-copy > * + * { margin-top: 1.33em; }
+.about-copy strong { font-weight: 700; }
+.about-copy a { text-decoration: underline; text-underline-offset: 4px; }
+.about-cv {
+  display: inline-block;
+  margin-top: 2em;
+  border: 3px solid var(--accent);
+  border-radius: 999px;
+  padding: 0.6em 1.3em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.about-cv:hover { background: var(--accent); color: #111; }
+@media (min-width: 768px) {
+  .about-hero { position: relative; aspect-ratio: 4 / 3; background: none; }
+  .about-photo { position: absolute; inset: 0; aspect-ratio: auto; }
+  .about-copy-wrap { position: absolute; top: 5cqw; left: 50cqw; right: 2.5cqw; padding: 0; }
+  .about-copy { font-size: 1.7cqw; }
+  .about-cv { font-size: 1.7cqw; margin-top: 1.9em; border-width: max(2px, 0.27cqw); }
+}

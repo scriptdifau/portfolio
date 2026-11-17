@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { saveSettings } from "@/app/admin/actions";
 import { Media } from "@/components/Media";
 import type { SiteSettings } from "@/lib/types";
+import { DEFAULT_ABOUT, DEFAULT_ABOUT_IMAGE } from "@/lib/aboutDefault";
 import { bodyToHtml } from "@/lib/sanitize";
 import { RichEditor } from "./RichEditor";
 import { Uploader } from "./Uploader";
@@ -36,12 +37,19 @@ function Field({
 export function SettingsForm({ s }: { s: SiteSettings }) {
   const [msg, action, pending] = useActionState(saveSettings, null);
   const [hero, setHero] = useState(s.hero_video_url ?? "");
-  const [about, setAbout] = useState(bodyToHtml(s.about));
+  const [about, setAbout] = useState(bodyToHtml(s.about ?? DEFAULT_ABOUT));
+  const [aboutImage, setAboutImage] = useState(s.about_image_url ?? "");
+  const [cv, setCv] = useState(s.cv_url ?? "");
 
   return (
     <form action={action} className="space-y-6">
       <input type="hidden" name="hero_video_url" value={hero} />
       <input type="hidden" name="about" value={about} />
+      {/* foto e CV si inviano solo se modificati: così il salvataggio non dipende dalle colonne su Supabase */}
+      {aboutImage !== (s.about_image_url ?? "") && (
+        <input type="hidden" name="about_image_url" value={aboutImage} />
+      )}
+      {cv !== (s.cv_url ?? "") && <input type="hidden" name="cv_url" value={cv} />}
       <Field label="Nome del sito (logo)" name="site_name" value={s.site_name} />
 
       <div>
@@ -62,6 +70,34 @@ export function SettingsForm({ s }: { s: SiteSettings }) {
         <span className="mb-1 block text-sm font-medium">Testo About</span>
         <RichEditor html={about} onChange={setAbout} />
       </div>
+      <div>
+        <span className="mb-2 block text-sm font-medium">Foto della pagina About</span>
+        <div className="mb-2 w-64">
+          <Media url={aboutImage || DEFAULT_ABOUT_IMAGE} type="image" raw className="aspect-[4/3] w-full object-cover" />
+          {aboutImage && (
+            <button type="button" onClick={() => setAboutImage("")} className="mt-1 text-xs text-red-600">
+              Torna alla foto di partenza
+            </button>
+          )}
+        </div>
+        <Uploader label="Carica foto" accept="image/*" onUploaded={(f) => setAboutImage(f.url)} />
+      </div>
+
+      <div>
+        <span className="mb-2 block text-sm font-medium">CV (PDF) — il pulsante Download my CV compare solo se è caricato</span>
+        {cv && (
+          <p className="mb-2 text-sm">
+            <a href={cv} target="_blank" rel="noreferrer" className="underline">
+              CV caricato
+            </a>{" "}
+            <button type="button" onClick={() => setCv("")} className="text-xs text-red-600">
+              Rimuovi
+            </button>
+          </p>
+        )}
+        <Uploader label="Carica CV (PDF)" accept="application/pdf" onUploaded={(f) => setCv(f.url)} />
+      </div>
+
       <div className="grid gap-6 sm:grid-cols-2">
         <Field label="Email" name="email" value={s.email} />
         <Field label="Telefono" name="phone" value={s.phone} />
