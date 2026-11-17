@@ -60,12 +60,17 @@ async function Project({ params }: Props) {
       )}
 
       {next && next.id !== project.id && (
-        <div className="pt-16 text-right">
+        <div className="pt-16 text-right md:pt-24">
           <Link
             href={`/projects/${next.slug}`}
-            className="text-sm uppercase tracking-[0.02em] hover:opacity-60 md:text-xl"
+            className="inline-flex items-center gap-3 text-sm tracking-[0.02em] hover:opacity-60 md:text-xl"
           >
-            Next | {next.title} →
+            <span>
+              Next | <span className="uppercase">{next.title}</span>
+            </span>
+            <svg viewBox="0 0 40 12" className="h-3 w-9 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+              <path d="M0 6h38M33 1l5 5-5 5" />
+            </svg>
           </Link>
         </div>
       )}

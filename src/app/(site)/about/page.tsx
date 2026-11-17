@@ -7,9 +7,9 @@ export const metadata: Metadata = { title: "About" };
 export default async function About() {
   const { about } = await getSettings();
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16">
-      <h1 className="mb-10 text-4xl font-light sm:text-5xl">About</h1>
+    <article className="post-column px-4 pb-12 pt-6 sm:px-0 md:pt-10">
+      <h1 className="post-title">About</h1>
       {about && <RichText text={about} />}
-    </div>
+    </article>
   );
 }
