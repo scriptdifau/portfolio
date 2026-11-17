@@ -71,4 +71,11 @@ body {
 /* Titolo al centro dei box della home: al passaggio del mouse, sempre visibile su touch */
 .tile-label { opacity: 0; }
 .tile:hover .tile-label, .tile:focus-visible .tile-label { opacity: 1; }
-@media (hover: none) { .tile-label { opacity: 1; } }
+/* Su touch i titoli sono sempre visibili: niente velo scuro sulle immagini, solo un'ombra dietro il testo */
+@media (hover: none) {
+  .tile-label {
+    opacity: 1;
+    background-color: transparent;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.65);
+  }
+}
