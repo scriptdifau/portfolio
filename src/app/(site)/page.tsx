@@ -22,8 +22,9 @@ function Grid({ projects, count, className }: { projects: Project[]; count: numb
   return (
     <section className={className}>
       {columns.map((col, i) => (
-        // Colonne e box si sovrappongono di 1 px: evita la sottile linea bianca che i browser
-        // lasciano tra due box quando le misure cadono su frazioni di pixel.
+        // Colonne e box si sovrappongono di 1 px e le immagini sono ingrandite del 2%: i browser
+        // (Safari su iPhone in particolare) lasciano una linea chiara tra due box quando le misure
+        // cadono su frazioni di pixel.
         <div key={i} className={`flex min-w-0 flex-1 flex-col ${i > 0 ? "-ml-px" : ""}`}>
           {col.map((p, j) => (
             <Link
@@ -39,7 +40,7 @@ function Grid({ projects, count, className }: { projects: Project[]; count: numb
                   alt={p.title}
                   fill
                   sizes="(min-width: 640px) 34vw, 50vw"
-                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  className="h-full w-full scale-[1.02] object-cover transition duration-500 group-hover:scale-105"
                 />
               ) : (
                 <div className="flex h-full items-center justify-center p-2 text-center text-[0.7rem] font-light sm:p-4 sm:text-lg">{p.title}</div>
