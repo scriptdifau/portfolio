@@ -22,13 +22,15 @@ function Grid({ projects, count, className }: { projects: Project[]; count: numb
   return (
     <section className={className}>
       {columns.map((col, i) => (
-        <div key={i} className="flex min-w-0 flex-1 flex-col">
-          {col.map((p) => (
+        // Colonne e box si sovrappongono di 1 px: evita la sottile linea bianca che i browser
+        // lasciano tra due box quando le misure cadono su frazioni di pixel.
+        <div key={i} className={`flex min-w-0 flex-1 flex-col ${i > 0 ? "-ml-px" : ""}`}>
+          {col.map((p, j) => (
             <Link
               key={p.id}
               href={`/projects/${p.slug}`}
               style={{ aspectRatio: SHAPE_ASPECT[p.tile_shape] ?? "1 / 1" }}
-              className="tile group relative block w-full overflow-hidden bg-neutral-100"
+              className={`tile group relative block w-full overflow-hidden bg-neutral-100 ${j > 0 ? "-mt-px" : ""}`}
             >
               {p.cover_url ? (
                 <Media
