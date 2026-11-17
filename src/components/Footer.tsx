@@ -70,7 +70,7 @@ export async function Footer({ s }: { s: SiteSettings }) {
         />
 
         <div className="min-w-0 flex-1">
-          <div className="flex min-h-16 flex-wrap items-center justify-between gap-x-8 gap-y-4 text-[0.95rem] sm:h-[4.1rem]">
+          <div className="flex min-h-16 flex-wrap items-center justify-between gap-x-8 gap-y-4 pb-4 text-[0.95rem] sm:h-[4.1rem] sm:pb-0">
             {s.email && (
               <a href={`mailto:${s.email}`} className="flex items-center gap-3 hover:opacity-60">
                 <MailIcon />

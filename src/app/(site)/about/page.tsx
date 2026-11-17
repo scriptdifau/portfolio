@@ -19,11 +19,11 @@ export default async function About() {
             alt=""
             fill
             priority
-            sizes="(min-width: 1100px) 65vw, 100vw"
+            sizes="(min-width: 1100px) 27vw, (min-width: 768px) 40vw, 78vw"
             className="object-cover"
           />
         </div>
-        <div className="about-copy-wrap">
+        <div className="about-block">
           <RichText text={about || DEFAULT_ABOUT} className="about-copy" />
           {cv_url && (
             <a href={cv_url} target="_blank" rel="noreferrer" className="about-cv">
