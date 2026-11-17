@@ -136,6 +136,21 @@ export async function saveSettings(_: string | null, formData: FormData) {
       ? "Prima di salvare foto e CV vanno aggiunte due colonne su Supabase: esegui il blocco SQL in fondo a supabase/schema.sql."
       : error.message;
   }
+  // verifica: foto e CV devono risultare davvero scritti nel database
+  if ("about_image_url" in extra || "cv_url" in extra) {
+    const { data, error: readError } = await supabase
+      .from("site_settings")
+      .select("about_image_url, cv_url")
+      .eq("id", 1)
+      .maybeSingle();
+    if (readError) return `Salvato, ma non riesco a verificare foto e CV: ${readError.message}`;
+    if ("cv_url" in extra && (data?.cv_url ?? null) !== extra.cv_url) {
+      return `Il CV NON risulta registrato nel database (letto: ${data?.cv_url ?? "vuoto"}). Riprova e mandami questo messaggio.`;
+    }
+    if ("about_image_url" in extra && (data?.about_image_url ?? null) !== extra.about_image_url) {
+      return `La foto NON risulta registrata nel database (letto: ${data?.about_image_url ?? "vuoto"}). Riprova e mandami questo messaggio.`;
+    }
+  }
   refresh();
   return "Salvato ✓";
 }
