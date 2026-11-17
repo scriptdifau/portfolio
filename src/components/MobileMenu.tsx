@@ -46,7 +46,7 @@ export function MobileMenu({
       </button>
 
       {open && (
-        <nav className="absolute inset-x-0 top-full h-[calc(100dvh-4rem)] space-y-8 overflow-y-auto bg-white px-6 py-8">
+        <nav className="absolute inset-x-0 top-full h-[calc(100dvh-var(--header-h-m))] space-y-8 overflow-y-auto bg-white px-6 py-8">
           {group("Project", projects)}
           <ul className="space-y-3 text-sm uppercase tracking-widest">
             <li>

@@ -66,7 +66,7 @@ export async function Footer({ s }: { s: SiteSettings }) {
           alt="Get in touch!"
           width={172}
           height={124}
-          className="h-auto w-24 shrink-0 sm:w-[6.5rem]"
+          className="hidden h-auto shrink-0 sm:block sm:w-[6.5rem]"
         />
 
         <div className="min-w-0 flex-1">
@@ -110,7 +110,7 @@ export async function Footer({ s }: { s: SiteSettings }) {
               )}
             </div>
           </div>
-          <div className="border-t-4 border-black pt-2 text-xs sm:text-right">
+          <div className="border-t-4 border-[var(--accent)] pt-2 text-xs sm:text-right">
             © {year} {s.site_name}. All rights reserved.
           </div>
         </div>

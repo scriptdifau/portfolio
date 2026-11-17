@@ -3,8 +3,10 @@
 :root {
   --background: #ffffff;
   --foreground: #111111;
-  --header-bg: #ededed; /* sfondo dell'header */
-  --header-h: 4.4rem; /* altezza dell'header da 768 px in su (sotto: 4rem) */
+  --accent: #a7ff00; /* verde: sfondo dell'header e linea del footer */
+  --header-bg: var(--accent);
+  --header-h: 6.25rem; /* altezza dell'header da 768 px in su */
+  --header-h-m: 4.5rem; /* altezza dell'header su telefono */
 }
 
 @theme inline {
