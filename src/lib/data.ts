@@ -20,6 +20,23 @@ const CACHE = { stale: 300, revalidate: 60, expire: 60 * 60 * 24 * 7 };
 // un errore NON viene messo in cache, così non sostituisce una pagina buona con una vuota.
 const isBuild = process.env.NEXT_PHASE === "phase-production-build";
 
+// Peso di un file (HEAD): serve a decidere se un video può partire da solo. Non è nel database.
+const sizeCache = new Map<string, number>();
+async function sizeOf(url: string | null | undefined): Promise<number | null> {
+  if (!url) return null;
+  const known = sizeCache.get(url);
+  if (known) return known;
+  try {
+    const res = await fetch(url, { method: "HEAD", signal: AbortSignal.timeout(5000) });
+    const bytes = Number(res.headers.get("content-length"));
+    if (!res.ok || !bytes) return null;
+    sizeCache.set(url, bytes);
+    return bytes;
+  } catch {
+    return null;
+  }
+}
+
 function fail(what: string, error: { message: string }): never {
   throw new Error(`Supabase non risponde (${what}): ${error.message}`);
 }
@@ -34,7 +51,8 @@ export async function getSettings(): Promise<SiteSettings> {
     if (isBuild) return seedSettings;
     fail("impostazioni", error);
   }
-  return (data as SiteSettings | null) ?? seedSettings;
+  const settings = (data as SiteSettings | null) ?? seedSettings;
+  return { ...settings, hero_bytes: await sizeOf(settings.hero_video_url) };
 }
 
 export async function getProjects(): Promise<Project[]> {
@@ -52,7 +70,16 @@ export async function getProjects(): Promise<Project[]> {
     if (isBuild) return [];
     fail("progetti", error);
   }
-  return (data as Project[] | null) ?? [];
+  const projects = (data as Project[] | null) ?? [];
+  return Promise.all(
+    projects.map(async (p) => ({
+      ...p,
+      cover_bytes: p.cover_type === "video" ? await sizeOf(p.cover_url) : null,
+      media: await Promise.all(
+        (p.media ?? []).map(async (m) => (m.type === "video" ? { ...m, bytes: await sizeOf(m.url) } : m)),
+      ),
+    })),
+  );
 }
 
 export async function getProject(slug: string): Promise<Project | null> {

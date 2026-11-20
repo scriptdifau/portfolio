@@ -2,9 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// Video delle tile: il file si scarica solo quando il box sta per entrare nello schermo
-// (i box nascosti della griglia non scelta, o molto in basso, non consumano banda) e si ferma quando esce.
-export function TileVideo({ url, className }: { url: string; className?: string }) {
+// Video in loop dei box (e del video in cima alla home).
+// - autoplay (file leggero): il file si scarica solo quando il box sta per entrare nello schermo, parte da solo e si ferma quando esce.
+// - altrimenti (file pesante o peso sconosciuto): si carica solo il primo fotogramma e il video resta fermo,
+//   così le visite non scaricano decine di MB. Comprimendo il video da /admin/optimize torna a partire da solo.
+export function TileVideo({
+  url,
+  className,
+  autoplay = false,
+}: {
+  url: string;
+  className?: string;
+  autoplay?: boolean;
+}) {
   const ref = useRef<HTMLVideoElement>(null);
   const [load, setLoad] = useState(false);
 
@@ -15,8 +25,8 @@ export function TileVideo({ url, className }: { url: string; className?: string 
       ([entry]) => {
         if (entry.isIntersecting) {
           setLoad(true);
-          video.play().catch(() => {});
-        } else {
+          if (autoplay) video.play().catch(() => {});
+        } else if (autoplay) {
           video.pause();
         }
       },
@@ -24,18 +34,19 @@ export function TileVideo({ url, className }: { url: string; className?: string 
     );
     observer.observe(video);
     return () => observer.disconnect();
-  }, []);
+  }, [autoplay]);
 
   return (
     <video
       ref={ref}
-      src={load ? url : undefined}
+      // #t=0.001: mostra il primo fotogramma senza scaricare il video
+      src={load ? (autoplay ? url : `${url}#t=0.001`) : undefined}
       className={className}
-      autoPlay
+      autoPlay={autoplay}
       muted
-      loop
+      loop={autoplay}
       playsInline
-      preload="none"
+      preload={autoplay ? "none" : "metadata"}
     />
   );
 }

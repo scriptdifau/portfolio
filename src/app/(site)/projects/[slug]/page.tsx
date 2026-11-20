@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { Media } from "@/components/Media";
 import { RichText } from "@/components/RichText";
 import { getProject, getProjects } from "@/lib/data";
+import { GALLERY_MAX_BYTES, canAutoplay } from "@/lib/media";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -50,7 +51,7 @@ async function Project({ params }: Props) {
                     : "w-full"
               }
             >
-              <Media url={m.url} type={m.type} alt={m.caption} player sizes="(min-width: 1100px) 65vw, 100vw" className="w-full" />
+              <Media url={m.url} type={m.type} alt={m.caption} player autoplay={canAutoplay(m.bytes, GALLERY_MAX_BYTES)} sizes="(min-width: 1100px) 65vw, 100vw" className="w-full" />
               {m.caption && (
                 <figcaption className="py-2 text-xs text-neutral-500">{m.caption}</figcaption>
               )}

@@ -1,18 +1,22 @@
 // Compressione dei video nel browser, prima del caricamento (WebCodecs, accelerata dall'hardware).
 // Un video da 40 MB scende di solito a 3-6 MB. Se qualcosa non è supportato si carica l'originale.
 
-const MAX_WIDTH = 1280; // 720p: sufficiente per la colonna centrale del sito
-const VIDEO_BITRATE = 2_500_000;
-const SKIP_BELOW_BYTES = 5_000_000; // già abbastanza leggero
+// "full": video nelle pagine dei progetti (720p). "tile": box della home, piccoli e senza audio (640 px, circa 3 MB ogni 30 s).
+export type VideoPreset = "full" | "tile";
+const PRESETS = {
+  full: { width: 1280, bitrate: 2_500_000, fps: 30, audio: true, skipBelow: 5_000_000 },
+  tile: { width: 640, bitrate: 800_000, fps: 24, audio: false, skipBelow: 1_500_000 },
+} as const;
 
 export type CompressResult = { file: File; compressed: boolean };
 
 export async function compressVideo(
   file: File,
   onProgress?: (percent: number) => void,
-  skipBelowBytes = SKIP_BELOW_BYTES,
+  opts: { preset?: VideoPreset; skipBelowBytes?: number } = {},
 ): Promise<CompressResult> {
-  if (file.size < skipBelowBytes || typeof VideoEncoder === "undefined") {
+  const preset = PRESETS[opts.preset ?? "full"];
+  if (file.size < (opts.skipBelowBytes ?? preset.skipBelow) || typeof VideoEncoder === "undefined") {
     return { file, compressed: false };
   }
   try {
@@ -31,11 +35,11 @@ export async function compressVideo(
       input,
       output,
       video: {
-        width: Math.min(MAX_WIDTH, track.displayWidth),
-        bitrate: VIDEO_BITRATE,
-        frameRate: 30,
+        width: Math.min(preset.width, track.displayWidth),
+        bitrate: preset.bitrate,
+        frameRate: preset.fps,
       },
-      audio: { bitrate: 128_000 },
+      audio: preset.audio ? { bitrate: 128_000 } : { discard: true },
     });
     if (!conversion.isValid) return { file, compressed: false };
 

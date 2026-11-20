@@ -44,20 +44,28 @@ function getObserver() {
   return observer;
 }
 
-export function AutoPlayVideo({ url, className }: { url: string; className?: string }) {
+export function AutoPlayVideo({
+  url,
+  className,
+  autoplay = false,
+}: {
+  url: string;
+  className?: string;
+  autoplay?: boolean; // false = file pesante: resta fermo (primo fotogramma) finché non lo avvii tu
+}) {
   const ref = useRef<HTMLVideoElement>(null);
   const retried = useRef(false);
 
   useEffect(() => {
     const video = ref.current;
-    if (!video) return;
+    if (!video || !autoplay) return;
     const obs = getObserver();
     obs.observe(video);
     return () => {
       obs.unobserve(video);
       ratios.delete(video);
     };
-  }, []);
+  }, [autoplay]);
 
   return (
     <video

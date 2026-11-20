@@ -5,9 +5,16 @@ import { refreshContent } from "@/app/admin/actions";
 import { compressVideo } from "@/lib/compressVideo";
 import { createClient } from "@/lib/supabase/client";
 
-type VideoFile = { path: string; url: string; size: number; usedIn: string[]; state: string };
+type VideoFile = {
+  path: string;
+  url: string;
+  size: number;
+  usedIn: string[];
+  tile: boolean; // usato solo come copertina dei box della home: compressione più forte
+  state: string;
+};
 
-const MIN_BYTES = 5_000_000;
+const MIN_BYTES = 3_500_000;
 const mb = (n: number) => `${(n / 1_000_000).toFixed(1)} MB`;
 
 export function VideoOptimizer() {
@@ -48,13 +55,18 @@ export function VideoOptimizer() {
       .map((f) => {
         const url = bucket.getPublicUrl(f.path).data.publicUrl;
         const usedIn: string[] = [];
+        let asCover = false;
+        let elsewhere = false;
         for (const pr of projects ?? []) {
           if (JSON.stringify([pr.cover_url, pr.media, pr.body]).includes(f.path)) usedIn.push(pr.title);
+          if (pr.cover_url === url) asCover = true;
+          if (JSON.stringify([pr.media, pr.body]).includes(f.path)) elsewhere = true;
         }
         if (settings && JSON.stringify([settings.hero_video_url, settings.about]).includes(f.path)) {
           usedIn.push("Impostazioni (home/About)");
+          elsewhere = true;
         }
-        return { path: f.path, url, size: f.size, usedIn, state: "" };
+        return { path: f.path, url, size: f.size, usedIn, tile: asCover && !elsewhere, state: "" };
       })
       .sort((a, b) => b.size - a.size);
     setVideos(found);
@@ -77,7 +89,9 @@ export function VideoOptimizer() {
       const blob = await (await fetch(video.url)).blob();
       const original = new File([blob], video.path.split("/").pop()!, { type: blob.type });
 
-      const result = await compressVideo(original, (p) => setState(video.path, `Compressione… ${p}%`));
+      const result = await compressVideo(original, (p) => setState(video.path, `Compressione… ${p}%`), {
+        preset: video.tile ? "tile" : "full",
+      });
       if (!result.compressed) {
         return setState(video.path, "Non comprimibile (già leggero o browser non supportato)");
       }
@@ -190,6 +204,7 @@ export function VideoOptimizer() {
               <p className="font-medium">{mb(v.size)}</p>
               <p className="truncate text-xs text-neutral-500">
                 {v.usedIn.length ? `Usato in: ${v.usedIn.join(", ")}` : "Non usato in nessun progetto"}
+                {v.tile && " · box della home (compressione leggera)"}
               </p>
               {v.state && <p className="text-xs">{v.state}</p>}
             </div>

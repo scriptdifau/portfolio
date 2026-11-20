@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { compressVideo } from "@/lib/compressVideo";
+import { compressVideo, type VideoPreset } from "@/lib/compressVideo";
 import type { MediaType } from "@/lib/types";
 
 type Props = {
   label: string;
   multiple?: boolean;
   accept?: string; // tipi di file ammessi; di default immagini e video
+  videoPreset?: VideoPreset; // "tile" per i video dei box della home
   onUploaded: (file: { url: string; type: MediaType }) => void;
 };
 
@@ -35,7 +36,7 @@ async function shrinkJpeg(file: File): Promise<File> {
 }
 
 // Carica direttamente da browser su Supabase Storage (nessun limite di body del server).
-export function Uploader({ label, multiple, accept = "image/*,video/*", onUploaded }: Props) {
+export function Uploader({ label, multiple, accept = "image/*,video/*", videoPreset, onUploaded }: Props) {
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -51,7 +52,9 @@ export function Uploader({ label, multiple, accept = "image/*,video/*", onUpload
       let file = await shrinkJpeg(original);
       if (file.type.startsWith("video")) {
         setStatus(`Compressione di ${file.name}…`);
-        const result = await compressVideo(file, (p) => setStatus(`Compressione di ${file.name}… ${p}%`));
+        const result = await compressVideo(file, (p) => setStatus(`Compressione di ${file.name}… ${p}%`), {
+          preset: videoPreset,
+        });
         file = result.file;
         if (file.size > VIDEO_WARN_MB * 1_000_000) {
           setError(

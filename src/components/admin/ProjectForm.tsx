@@ -107,7 +107,7 @@ export function ProjectForm({ project }: { project?: Project }) {
             </button>
           </div>
         )}
-        <Uploader label="Carica copertina" onUploaded={setCover} />
+        <Uploader label="Carica copertina" videoPreset="tile" onUploaded={setCover} />
       </div>
 
       <div>

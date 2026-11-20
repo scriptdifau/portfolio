@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Media } from "@/components/Media";
 import { getProjects, getSettings } from "@/lib/data";
+import { HERO_MAX_BYTES, TILE_MAX_BYTES, canAutoplay } from "@/lib/media";
 import { SHAPE_ASPECT, SHAPE_RATIO } from "@/lib/shapes";
 import type { Project } from "@/lib/types";
 
@@ -37,6 +38,7 @@ function Grid({ projects, count, className }: { projects: Project[]; count: numb
                 <Media
                   url={p.cover_url}
                   type={p.cover_type}
+                  autoplay={canAutoplay(p.cover_bytes, TILE_MAX_BYTES)}
                   alt={p.title}
                   fill
                   sizes="(min-width: 640px) 34vw, 50vw"
@@ -70,6 +72,7 @@ export default async function Home() {
             <Media
               url={settings.hero_video_url}
               type="video"
+              autoplay={canAutoplay(settings.hero_bytes, HERO_MAX_BYTES)}
               className="mb-10 aspect-video w-full object-cover md:mb-14"
             />
           )}

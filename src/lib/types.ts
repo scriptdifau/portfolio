@@ -4,7 +4,13 @@ export type TileShape = "square" | "portrait" | "tall" | "landscape" | "wide";
 
 export type MediaWidth = "full" | "half" | "third";
 
-export type MediaItem = { url: string; type: MediaType; caption?: string; width?: MediaWidth };
+export type MediaItem = {
+  url: string;
+  type: MediaType;
+  caption?: string;
+  width?: MediaWidth;
+  bytes?: number | null; // peso del file (video), calcolato dal sito: non è nel database
+};
 
 export type Project = {
   id: string;
@@ -15,6 +21,7 @@ export type Project = {
   body: string | null;
   cover_url: string | null;
   cover_type: MediaType;
+  cover_bytes?: number | null; // peso della copertina se è un video (calcolato dal sito)
   tile_shape: TileShape;
   media: MediaItem[];
   highlight: boolean;
@@ -34,4 +41,5 @@ export type SiteSettings = {
   offices: string | null;
   about_image_url?: string | null; // foto della pagina About (colonna da aggiungere su Supabase)
   cv_url?: string | null; // PDF del CV (colonna da aggiungere su Supabase)
+  hero_bytes?: number | null; // peso del video della home (calcolato dal sito)
 };

@@ -17,16 +17,18 @@ type Props = {
   sizes?: string;
   // Anteprime dell'admin: nessuna ottimizzazione, i video non si scaricano finché non li avvii.
   raw?: boolean;
+  // Il video può partire da solo (file leggero). Se manca o è false resta un fotogramma fermo.
+  autoplay?: boolean;
 };
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const optimizable = (url: string) => Boolean(supabaseUrl) && url.startsWith(`${supabaseUrl}/storage/`);
 
-export function Media({ url, type, alt = "", className = "", player, fill, sizes, raw }: Props) {
+export function Media({ url, type, alt = "", className = "", player, fill, sizes, raw, autoplay = false }: Props) {
   if (type === "video") {
     if (raw) return <video src={url} className={className} controls preload="none" playsInline />;
-    if (player) return <AutoPlayVideo url={url} className={className} />;
-    return <TileVideo url={url} className={className} />;
+    if (player) return <AutoPlayVideo url={url} className={className} autoplay={autoplay} />;
+    return <TileVideo url={url} className={className} autoplay={autoplay} />;
   }
 
   if (raw) {
