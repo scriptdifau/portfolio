@@ -38,7 +38,13 @@ export async function login(_: string | null, formData: FormData) {
     email: String(formData.get("email") ?? ""),
     password: String(formData.get("password") ?? ""),
   });
-  if (error) return "Email o password non corretti.";
+  if (error) {
+    // 402 = Supabase ha bloccato il progetto (limiti di traffico superati): non c'entra la password
+    if (error.status === 402 || /restricted/i.test(error.message)) {
+      return "Il servizio Supabase è temporaneamente bloccato (limiti di traffico superati): l'accesso torna dopo il reset del ciclo o passando al piano Pro. La tua password non c'entra.";
+    }
+    return "Email o password non corretti.";
+  }
   redirect("/admin");
 }
 
