@@ -1,17 +1,13 @@
 import type { NextConfig } from "next";
 
-const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
-  ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
-  : null;
-
 const nextConfig: NextConfig = {
   images: {
-    // Le foto caricate su Supabase vengono ridimensionate e tenute in cache da Vercel (1 anno):
-    // Supabase le serve una volta sola e non a ogni visita.
-    remotePatterns: supabaseHost
-      ? [{ protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/media/**" }]
-      : [],
-    minimumCacheTTL: 31536000,
+    // Niente ottimizzatore di Vercel (limiti del piano gratuito): le foto le ridimensiona Supabase,
+    // vedi src/lib/imageLoader.ts. Larghezze ridotte = meno versioni diverse da tenere in cache.
+    loader: "custom",
+    loaderFile: "./src/lib/imageLoader.ts",
+    deviceSizes: [640, 828, 1080, 1200, 1920],
+    imageSizes: [128, 256, 384],
   },
   cacheComponents: true,
   partialPrefetching: true,
