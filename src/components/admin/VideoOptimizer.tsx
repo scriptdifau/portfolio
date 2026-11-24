@@ -148,15 +148,16 @@ export function VideoOptimizer() {
 
   async function optimizeAll() {
     if (!videos) return;
+    const toCompress = videos.filter((v) => v.usedIn.length > 0); // i video non usati non si comprimono: si eliminano
     const ok = window.confirm(
-      `Comprimo ${videos.length} video, uno dopo l'altro. Servono alcuni minuti e la scheda deve restare aperta. ${
+      `Comprimo ${toCompress.length} video, uno dopo l'altro. Servono alcuni minuti e la scheda deve restare aperta. ${
         deleteOriginals ? "Gli originali verranno CANCELLATI." : "Gli originali verranno conservati."
       } Procedo?`,
     );
     if (!ok) return;
     setBusy(true);
     setError(null);
-    for (const v of videos) {
+    for (const v of toCompress) {
       if (v.state.startsWith("Fatto")) continue;
       await optimize(v);
     }
@@ -166,17 +167,22 @@ export function VideoOptimizer() {
   if (error) return <p className="text-red-600">{error}</p>;
   if (!videos) return <p className="text-sm text-neutral-500">Cerco i video…</p>;
 
-  const total = videos.reduce((n, v) => n + v.size, 0);
+  const inUse = videos.filter((v) => v.usedIn.length > 0);
+  const idle = videos.filter((v) => v.usedIn.length === 0);
+  const total = inUse.reduce((n, v) => n + v.size, 0);
+  const idleTotal = idle.reduce((n, v) => n + v.size, 0);
 
   return (
     <div className="space-y-6">
       <p className="text-sm">
-        {videos.length === 0
-          ? "Nessun video sopra i 5 MB: è tutto a posto."
-          : `${videos.length} video sopra i 5 MB, ${mb(total)} in totale.`}
+        {inUse.length === 0
+          ? "Nessun video in uso sopra i 3,5 MB: è tutto a posto."
+          : `${inUse.length} video in uso sopra i 3,5 MB, ${mb(total)} in totale.`}
+        {idle.length > 0 &&
+          ` Altri ${idle.length} (${mb(idleTotal)}) non sono usati da nessun progetto: non vanno compressi, si eliminano dalla sezione «Spazio occupato» qui sotto.`}
       </p>
 
-      {videos.length > 0 && (
+      {inUse.length > 0 && (
         <div className="flex flex-wrap items-center gap-6">
           <button
             onClick={optimizeAll}
@@ -198,7 +204,7 @@ export function VideoOptimizer() {
       )}
 
       <ul className="divide-y divide-neutral-200 bg-white">
-        {videos.map((v) => (
+        {[...inUse, ...idle].map((v) => (
           <li key={v.path} className="flex flex-wrap items-center gap-4 p-4 text-sm">
             <div className="min-w-0 flex-1">
               <p className="font-medium">{mb(v.size)}</p>
@@ -208,17 +214,21 @@ export function VideoOptimizer() {
               </p>
               {v.state && <p className="text-xs">{v.state}</p>}
             </div>
-            <button
-              onClick={async () => {
-                setBusy(true);
-                await optimize(v);
-                setBusy(false);
-              }}
-              disabled={busy || v.state.startsWith("Fatto")}
-              className="border border-neutral-300 px-3 py-1 disabled:opacity-40"
-            >
-              Comprimi
-            </button>
+            {v.usedIn.length > 0 ? (
+              <button
+                onClick={async () => {
+                  setBusy(true);
+                  await optimize(v);
+                  setBusy(false);
+                }}
+                disabled={busy || v.state.startsWith("Fatto")}
+                className="border border-neutral-300 px-3 py-1 disabled:opacity-40"
+              >
+                Comprimi
+              </button>
+            ) : (
+              <span className="text-xs text-neutral-500">Da eliminare in «Spazio occupato» ↓</span>
+            )}
           </li>
         ))}
       </ul>
